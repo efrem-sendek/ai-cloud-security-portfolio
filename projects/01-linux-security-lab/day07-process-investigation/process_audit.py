@@ -8,8 +8,10 @@ if len(sys.argv) != 2:
     sys.exit(1)
 try:
     pid = int(sys.argv[1])
+    if pid <= 0:
+        raise ValueError("Invalid PID")
 except ValueError:
-    print("Error: PID must be a number")
+    print("Error: PID must be a positive integer")
     sys.exit(1)
 status_file = Path(f"/proc/{pid}/status")
 
@@ -19,13 +21,7 @@ except (FileNotFoundError, PermissionError) as error:
     print(f"Cannot inspect process: {error}")
     sys.exit(1)
 
-print(f"Investigating PID: {pid}")
 
-for line in status.splitlines():
-    if line.startswith(("Name:", "State:", "PPid:", "Uid:")):
-        print(line)
-
-print(f"Investigator UID: {os.getuid()}")
 report = {
     "pid": pid,
     "investigator_uid": os.getuid()
