@@ -30,3 +30,7 @@ assert report["pid"] == pid
 assert report["investigator_uid"] == os.getuid()
 
 print("PASS: Valid PID produces correct JSON")
+assert report["effective_uid"] == os.geteuid()
+assert report["is_privileged"] == (os.geteuid() == 0)
+
+print("PASS: Process privilege correctly classified")

@@ -32,4 +32,13 @@ for line in status.splitlines():
         key, value = line.split(":", 1)
         report[key.lower()] = value.strip()
 
+uids = report["uid"].split()
+
+report["real_uid"] = int(uids[0])
+effective_uid = int(uids[1])
+report["saved_uid"] = int(uids[2])
+report["filesystem_uid"] = int(uids[3])
+
+report["effective_uid"] = effective_uid
+report["is_privileged"] = effective_uid == 0
 print(json.dumps(report, indent=4))
