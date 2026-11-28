@@ -2,7 +2,7 @@ from pathlib import Path
 import os
 import sys
 import json
-
+from privilege_detection import detect_privilege_escalation
 if len(sys.argv) != 2:
     print("Usage: python3 process_audit.py <PID>")
     sys.exit(1)
@@ -41,4 +41,10 @@ report["filesystem_uid"] = int(uids[3])
 
 report["effective_uid"] = effective_uid
 report["is_privileged"] = effective_uid == 0
+report["potential_privilege_escalation"] = (
+    detect_privilege_escalation(
+        report["real_uid"], effective_uid 
+    )
+)
 print(json.dumps(report, indent=4))
+
